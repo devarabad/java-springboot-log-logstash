@@ -46,7 +46,7 @@ Eg.
 
 5. Go to Stream and Reload the Logs
 
-### Send Mule App Logs to ELK ###
+### Send Application Logs to ELK ###
 1. Call an enpoint
 ```
 $ curl http://localhost:8081/api/books/1
