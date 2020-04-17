@@ -48,6 +48,13 @@ public class LogInterceptor implements HandlerInterceptor
       loggingService.logRequest(request, null, correlationId);
     }
 
+    // Log requests for http [DELETE]
+    if (DispatcherType.REQUEST.name().equals(request.getDispatcherType().name())
+      && request.getMethod().equals(HttpMethod.DELETE.name()))
+    {
+      loggingService.logRequest(request, null, correlationId);
+    }
+
     return true;
   }
 
