@@ -42,6 +42,8 @@ public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter
                               , Type targetType
                               , Class<? extends HttpMessageConverter<?>> converterType)
   {
+    String correlationId = httpServletRequest.getAttribute("correlationId").toString();
+    loggingService.logRequest(httpServletRequest, body, correlationId);
     return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
   }
 }
