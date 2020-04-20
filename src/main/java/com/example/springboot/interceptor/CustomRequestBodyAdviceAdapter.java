@@ -44,6 +44,7 @@ public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter
   {
     String correlationId = httpServletRequest.getAttribute("correlationId").toString();
     loggingService.logRequest(httpServletRequest, body, correlationId);
+
     return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
   }
 }
