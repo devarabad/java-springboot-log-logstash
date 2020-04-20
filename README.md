@@ -44,7 +44,7 @@ $ curl http://localhost:8081/api/books/1
     - unknown*
 ```
 Eg. 
-  filebeat-*,kibana_sample_data_logs*,logstash*,nprod*,prod*, unknown*
+  filebeat-*,kibana_sample_data_logs*,logstash*,nprod*,prod*,unknown*
 ```
 
 4. Apply the settings
