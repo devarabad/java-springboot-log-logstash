@@ -64,14 +64,17 @@ public class LoggingServiceImpl implements LoggingService
 
     try
     {
-      MDC.put("log_category", logCategory);
+      MDC.put("correlation_id", correlationId);
       MDC.put("method", method);
       MDC.put("path", path);
+      MDC.put("log_category", logCategory);
       String jsonLog = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entityLog);
       log.info(jsonLog);
       MDC.remove("log_category");
+      /**
       MDC.remove("method");
       MDC.remove("path");
+      //*/
     }
     catch (JsonProcessingException e)
     {
@@ -109,12 +112,15 @@ public class LoggingServiceImpl implements LoggingService
 
     try
     {
-      MDC.put("log_category", logCategory);
+      /**
       MDC.put("method", method);
       MDC.put("path", path);
+      //*/
+      MDC.put("log_category", logCategory);
       String jsonLog = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entityLog);
       log.info(jsonLog);
       MDC.remove("log_category");
+      MDC.remove("correlation_id");
       MDC.remove("method");
       MDC.remove("path");
     }
