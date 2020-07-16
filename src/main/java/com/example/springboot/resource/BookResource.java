@@ -1,11 +1,11 @@
 package com.example.springboot.resource;
 
-import com.example.springboot.data.model.Book;
+import com.example.springboot.resource.model.BookInfo;
 import com.example.springboot.resource.model.EntityResponse;
 import com.example.springboot.service.BookService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -15,8 +15,6 @@ import java.util.Map;
 @RequestMapping("/books")
 public class BookResource
 {
-  Logger log = LoggerFactory.getLogger(this.getClass());
-
   private final BookService bookService;
 
   public BookResource(BookService bookService)
@@ -25,32 +23,32 @@ public class BookResource
   }
 
   @GetMapping("/{id}")
-  public Book getBook(@PathVariable(name = "id") String id
-                      , @RequestAttribute("correlationId") String correlationId
-                      , @RequestHeader HttpHeaders headers)
+  public ResponseEntity<BookInfo> getBook(@PathVariable(name = "id")  String id
+                                          , @RequestHeader            HttpHeaders headers)
   {
-    Book book = bookService.getBook(id);
-    return book;
+    return ResponseEntity.ok(bookService.getBook(id));
   }
 
   @PostMapping
-  public EntityResponse postBook( @RequestAttribute("correlationId") String correlationId
-                                  , @RequestHeader HttpHeaders headers
-                                  , @RequestBody Book newBook)
+  public ResponseEntity<EntityResponse> postBook( @RequestHeader  HttpHeaders headers
+                                                  , @RequestBody  BookInfo newBook)
   {
     String generatedId          = bookService.addBook(newBook);
     Map<String, Object> entity  = new LinkedHashMap<String, Object>();
     entity.put("id", generatedId);
 
-    return new EntityResponse("success"
-                              , "Book added (but not really)"
-                              , entity);
+    EntityResponse entityResponse = new EntityResponse("success"
+                                                        , "Book added (but not really)"
+                                                        , entity);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(entityResponse);
   }
 
   @PutMapping("/{id}")
-  public EntityResponse putBook(@PathVariable(name = "id") String id, @RequestBody Book newBook)
+  public ResponseEntity<EntityResponse> putBook(@PathVariable(name = "id")  String id
+                                                , @RequestBody              BookInfo updateBook)
   {
-    boolean updated = bookService.updateBook(id, newBook);
+    boolean updated = bookService.updateBook(id, updateBook);
     String status   = "success";
     String message  = "Book updated (but not really)";
 
@@ -60,13 +58,16 @@ public class BookResource
       message = "Failed to update the book";
     }
 
-    return new EntityResponse(status, message, null);
+    EntityResponse entityResponse = new EntityResponse(status, message, null);
+
+    return ResponseEntity.ok().body(entityResponse);
   }
 
   @PatchMapping("/{id}")
-  public EntityResponse patchBook(@PathVariable(name = "id") String id, @RequestBody Book newBook)
+  public ResponseEntity<EntityResponse> patchBook(@PathVariable(name = "id")  String id
+                                                  , @RequestBody              BookInfo updateBook)
   {
-    boolean updated = bookService.updateBook(id, newBook);
+    boolean updated = bookService.updateBook(id, updateBook);
     String status   = "success";
     String message  = "Book partially updated (but not really)";
 
@@ -76,11 +77,13 @@ public class BookResource
       message = "Failed to update the book";
     }
 
-    return new EntityResponse(status, message, null);
+    EntityResponse entityResponse = new EntityResponse(status, message, null);
+
+    return ResponseEntity.ok().body(entityResponse);
   }
 
   @DeleteMapping("/{id}")
-  public EntityResponse deleteBook(@PathVariable(name = "id") String id)
+  public ResponseEntity<EntityResponse> deleteBook(@PathVariable(name = "id") String id)
   {
     boolean deleted = bookService.deleteBook(id);
     String status   = "success";
@@ -92,6 +95,8 @@ public class BookResource
       message = "Failed to delete the book";
     }
 
-    return new EntityResponse(status, message, null);
+    EntityResponse entityResponse = new EntityResponse(status, message, null);
+
+    return ResponseEntity.ok().body(entityResponse);
   }
 }

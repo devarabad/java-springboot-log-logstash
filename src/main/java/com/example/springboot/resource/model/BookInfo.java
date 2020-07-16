@@ -1,24 +1,26 @@
-package com.example.springboot.data.model;
+package com.example.springboot.resource.model;
 
-import java.util.Date;
-
-public class Book
+public class BookInfo
 {
-  private final String  id;
-  private final String  title;
-  private final String  description;
-  private final Date    publishDate;
-  private final String  genre;
-  private final String  author;
-  private final String  link;
+  private String  id;
+  private String  title;
+  private String  description;
+  private String  publishDate;
+  private String  genre;
+  private String  author;
+  private String  link;
 
-  public Book(String id
-              , String title
-              , String description
-              , Date publishDate
-              , String genre
-              , String author
-              , String link)
+  public BookInfo()
+  {
+  }
+
+  public BookInfo(String id
+                  , String title
+                  , String description
+                  , String publishDate
+                  , String genre
+                  , String author
+                  , String link)
   {
     this.id           = id;
     this.title        = title;
@@ -44,7 +46,7 @@ public class Book
     return description;
   }
 
-  public Date getPublishDate()
+  public String getPublishDate()
   {
     return publishDate;
   }

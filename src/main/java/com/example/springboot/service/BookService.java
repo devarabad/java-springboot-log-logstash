@@ -1,66 +1,163 @@
 package com.example.springboot.service;
 
+import com.example.springboot.common.AppLogger;
+import com.example.springboot.common.JsonUtil;
+import com.example.springboot.data.BookDao;
 import com.example.springboot.data.model.Book;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.springboot.resource.model.BookInfo;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BookService
 {
-  Logger log = LoggerFactory.getLogger(this.getClass());
+  AppLogger log = new AppLogger(this.getClass());
 
-  public BookService()
+  private final BookDao bookDao;
+
+  public BookService(BookDao bookDao)
   {
+    this.bookDao = bookDao;
   }
 
-  public Book getBook(String id)
+  public BookInfo getBook(String id)
   {
-    String title        = "Stiff: The Curious Lives of Human Cadavers";
-    String description  = "Stiff: The Curious Lives of Human Cadavers";
-    Date datetime       = null;
-    String genre        = "science";
-    String author       = "Mary Roach";
-    String link         = "http://e-bookmobile.com/books/Stiff";
+    Map<String, String> logFieldMap = new LinkedHashMap<String, String>();
+    logFieldMap.put("bookId", id);
+    log.info("Retrieving book", "BookService.getBook.start", logFieldMap);
+
+    Map<String, Object> query = new LinkedHashMap<>();
+    query.put("id", id);
+
+    Book book           = bookDao.find(query);
+    String title        = book.getTitle();
+    String description  = book.getDescription();
+    Date publishDate    = book.getPublishDate();
+    String genre        = book.getGenre();
+    String author       = book.getAuthor();
+    String link         = book.getLink();
 
     SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd");
-    String dateInString         = "2020-04-03";
+    String publishDateStr       = formatter.format(publishDate);
+
+    log.info(JsonUtil.toJson(book), "BookService.getBook.end", logFieldMap);
+
+    return new BookInfo(id
+                        , title
+                        , description
+                        , publishDateStr
+                        , genre
+                        , author
+                        , link);
+  }
+
+  public String addBook(BookInfo bookInfo)
+  {
+    log.info(JsonUtil.toJson(bookInfo), "BookService.addBook.start");
+
+    String title            = bookInfo.getTitle();
+    String description      = bookInfo.getDescription();
+    String publishDateStr   = bookInfo.getPublishDate();
+    String genre            = bookInfo.getGenre();
+    String author           = bookInfo.getAuthor();
+    String link             = bookInfo.getLink();
+
+    SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd");
+    Date publishDate            = null;
 
     try
     {
-      datetime = formatter.parse(dateInString);
+      if (publishDateStr != null)
+      {
+        publishDate = formatter.parse(publishDateStr);
+      }
     }
     catch (ParseException e)
     {
       e.printStackTrace();
     }
 
-    return new Book(id
-                    , title
-                    , description
-                    , datetime
-                    , genre
-                    , author
-                    , link);
+    Book book = new Book( null
+                          , title
+                          , description
+                          , publishDate
+                          , genre
+                          , author
+                          , link);
+
+    String bookId = bookDao.save(book);
+
+    Map<String, String> logFieldMap = new LinkedHashMap<String, String>();
+    logFieldMap.put("generatedId", bookId);
+    log.info(bookId != null ? "Book added" : "Book add failed", "BookService.addBook.end", logFieldMap);
+
+    return bookId;
   }
 
-  public String addBook(Book book)
+  public boolean updateBook(String id, BookInfo bookInfo)
   {
-    return UUID.randomUUID().toString();
-  }
+    Map<String, String> logFieldMap = new LinkedHashMap<String, String>();
+    logFieldMap.put("bookId", id);
+    log.info(JsonUtil.toJson(bookInfo), "BookService.updateBook.start", logFieldMap);
 
-  public boolean updateBook(String id, Book book)
-  {
-    return true;
+    String title            = bookInfo.getTitle();
+    String description      = bookInfo.getDescription();
+    String publishDateStr   = bookInfo.getPublishDate();
+    String genre            = bookInfo.getGenre();
+    String author           = bookInfo.getAuthor();
+    String link             = bookInfo.getLink();
+
+    SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd");
+    Date publishDate            = null;
+
+    try
+    {
+      if (publishDateStr != null)
+      {
+        publishDate = formatter.parse(publishDateStr);
+      }
+    }
+    catch (ParseException e)
+    {
+      e.printStackTrace();
+    }
+
+    Book book = new Book( null
+                          , title
+                          , description
+                          , publishDate
+                          , genre
+                          , author
+                          , link);
+
+    Map<String, Object> query = new LinkedHashMap<>();
+    query.put("id", id);
+
+    boolean update = bookDao.update(query, book);
+
+    logFieldMap.put("recordUpdated", String.valueOf(update));
+    log.info(update ? "Book updated" : "Book update failed", "BookService.updateBook.end", logFieldMap);
+
+    return update;
   }
 
   public boolean deleteBook(String id)
   {
-    return true;
+    Map<String, String> logFieldMap = new LinkedHashMap<String, String>();
+    logFieldMap.put("bookId", id);
+    log.info("Removing book", "BookService.deleteBook.start", logFieldMap);
+
+    Map<String, Object> query = new LinkedHashMap<>();
+    query.put("id", id);
+
+    boolean delete = bookDao.remove(query);
+
+    logFieldMap.put("recordDeleted", String.valueOf(delete));
+    log.info(delete ? "Book removed" : "Book remove failed", "BookService.deleteBook.end", logFieldMap);
+
+    return delete;
   }
 }
