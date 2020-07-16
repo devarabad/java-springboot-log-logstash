@@ -7,7 +7,7 @@ public class Book
   private final String  id;
   private final String  title;
   private final String  description;
-  private final Date    datetime;
+  private final Date    publishDate;
   private final String  genre;
   private final String  author;
   private final String  link;
@@ -15,7 +15,7 @@ public class Book
   public Book(String id
               , String title
               , String description
-              , Date datetime
+              , Date publishDate
               , String genre
               , String author
               , String link)
@@ -23,7 +23,7 @@ public class Book
     this.id           = id;
     this.title        = title;
     this.description  = description;
-    this.datetime     = datetime;
+    this.publishDate  = publishDate;
     this.genre        = genre;
     this.author       = author;
     this.link         = link;
@@ -44,9 +44,9 @@ public class Book
     return description;
   }
 
-  public Date getDatetime()
+  public Date getPublishDate()
   {
-    return datetime;
+    return publishDate;
   }
 
   public String getGenre()
