@@ -1,6 +1,6 @@
-package com.example.springboot.interceptor;
+package com.example.api.interceptor;
 
-import com.example.springboot.common.LoggingService;
+import com.example.api.common.LoggingService;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

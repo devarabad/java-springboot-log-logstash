@@ -1,4 +1,4 @@
-package com.example.springboot.common;
+package com.example.api.common;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;

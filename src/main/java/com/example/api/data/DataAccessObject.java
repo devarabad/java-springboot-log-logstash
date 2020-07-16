@@ -1,4 +1,4 @@
-package com.example.springboot.data;
+package com.example.api.data;
 
 import java.util.Map;
 

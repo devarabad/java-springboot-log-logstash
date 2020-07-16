@@ -1,10 +1,10 @@
-package com.example.springboot.service;
+package com.example.api.service;
 
-import com.example.springboot.common.AppLogger;
-import com.example.springboot.common.JsonUtil;
-import com.example.springboot.data.BookDao;
-import com.example.springboot.data.model.Book;
-import com.example.springboot.resource.model.BookInfo;
+import com.example.api.common.AppLogger;
+import com.example.api.common.JsonUtil;
+import com.example.api.data.BookDao;
+import com.example.api.data.model.Book;
+import com.example.api.resource.model.BookInfo;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;

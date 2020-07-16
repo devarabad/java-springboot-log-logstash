@@ -1,4 +1,4 @@
-package com.example.springboot.common;
+package com.example.api.common;
 
 public class LogField
 {

@@ -1,4 +1,4 @@
-package com.example.springboot.resource.model;
+package com.example.api.resource.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

@@ -1,6 +1,6 @@
-package com.example.springboot.data;
+package com.example.api.data;
 
-import com.example.springboot.data.model.Book;
+import com.example.api.data.model.Book;
 import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;

@@ -1,9 +1,7 @@
-package com.example.springboot.common;
+package com.example.api.common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.Map;
 
 public class JsonUtil
 {
