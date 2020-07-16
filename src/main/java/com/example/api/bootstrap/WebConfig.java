@@ -1,6 +1,6 @@
-package com.example.springboot.bootstrap;
+package com.example.api.bootstrap;
 
-import com.example.springboot.interceptor.LogInterceptor;
+import com.example.api.interceptor.LogInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

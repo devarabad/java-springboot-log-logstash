@@ -1,7 +1,6 @@
-package com.example.springboot.common;
+package com.example.api.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.http.HttpHeaders;
 
 import java.util.Map;
 

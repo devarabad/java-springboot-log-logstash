@@ -1,4 +1,4 @@
-package com.example.springboot.data.model;
+package com.example.api.data.model;
 
 import java.util.Date;
 
