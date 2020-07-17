@@ -1,24 +1,17 @@
 package com.example.api.common;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class LoggingServiceImpl implements LoggingService
 {
-  Logger log = LoggerFactory.getLogger(this.getClass());
+  AppLogger log = new AppLogger(this.getClass());
 
   @Value("${environment}")
   private String environment;
@@ -57,29 +50,24 @@ public class LoggingServiceImpl implements LoggingService
     String path                 = httpServletRequest.getRequestURI();
     String logCategory          = "start";
     Map<String, String> headers = buildHeadersMap(httpServletRequest);
-    Object payload              = body;
 
-    EntityLog entityLog = new EntityLog(environment, service, correlationId, method, path, logCategory, headers, payload);
-    ObjectMapper mapper = new ObjectMapper();
+    EntityLog entityLog = new EntityLog(environment
+                                        , service
+                                        , correlationId
+                                        , method
+                                        , path
+                                        , logCategory
+                                        , headers
+                                        , body);
 
-    try
-    {
-      MDC.put("correlation_id", correlationId);
-      MDC.put("method", method);
-      MDC.put("path", path);
-      MDC.put("log_category", logCategory);
-      String jsonLog = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entityLog);
-      log.info(jsonLog);
-      MDC.remove("log_category");
-      /**
-      MDC.remove("method");
-      MDC.remove("path");
-      //*/
-    }
-    catch (JsonProcessingException e)
-    {
-      e.printStackTrace();
-    }
+    MDC.put("correlation_id", correlationId);
+    MDC.put("method", method);
+    MDC.put("path", path);
+    log.info(entityLog, logCategory, LogType.JSON_STRING);
+    /**
+    MDC.remove("method");
+    MDC.remove("path");
+    //*/
   }
 
   @Override
@@ -105,29 +93,24 @@ public class LoggingServiceImpl implements LoggingService
     String path                 = httpServletRequest.getRequestURI();
     String logCategory          = "end";
     Map<String, String> headers = buildHeadersMap(httpServletRequest);
-    Object payload              = body;
 
-    EntityLog entityLog = new EntityLog(environment, service, correlationId, method, path, logCategory, headers, payload);
-    ObjectMapper mapper = new ObjectMapper();
+    EntityLog entityLog = new EntityLog(environment
+                                        , service
+                                        , correlationId
+                                        , method
+                                        , path
+                                        , logCategory
+                                        , headers
+                                        , body);
 
-    try
-    {
-      /**
-      MDC.put("method", method);
-      MDC.put("path", path);
-      //*/
-      MDC.put("log_category", logCategory);
-      String jsonLog = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entityLog);
-      log.info(jsonLog);
-      MDC.remove("log_category");
-      MDC.remove("correlation_id");
-      MDC.remove("method");
-      MDC.remove("path");
-    }
-    catch (JsonProcessingException e)
-    {
-      e.printStackTrace();
-    }
+    /**
+    MDC.put("method", method);
+    MDC.put("path", path);
+    //*/
+    log.info(entityLog, logCategory, LogType.JSON_STRING);
+    MDC.remove("correlation_id");
+    MDC.remove("method");
+    MDC.remove("path");
   }
 
   private Map<String, String> buildParametersMap(HttpServletRequest httpServletRequest)
@@ -147,13 +130,13 @@ public class LoggingServiceImpl implements LoggingService
 
   private Map<String, String> buildHeadersMap(HttpServletRequest request)
   {
-    Map<String, String> map = new HashMap<>();
+    Map<String, String> map         = new HashMap<>();
+    Enumeration<String> headerNames = request.getHeaderNames();
 
-    Enumeration headerNames = request.getHeaderNames();
     while (headerNames.hasMoreElements())
     {
-      String key = (String) headerNames.nextElement();
-      String value = request.getHeader(key);
+      String key    = headerNames.nextElement();
+      String value  = request.getHeader(key);
       map.put(key, value);
     }
 
@@ -162,13 +145,9 @@ public class LoggingServiceImpl implements LoggingService
 
   private Map<String, String> buildHeadersMap(HttpServletResponse response)
   {
-    Map<String, String> map = new HashMap<>();
-
-    Collection<String> headerNames = response.getHeaderNames();
-    for (String header : headerNames)
-    {
-      map.put(header, response.getHeader(header));
-    }
+    Map<String, String> map         = new LinkedHashMap<>();
+    Collection<String> headerNames  = response.getHeaderNames();
+    headerNames.forEach(header -> map.put(header, response.getHeader(header)));
 
     return map;
   }

@@ -3,8 +3,6 @@ package com.example.api.common;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,19 +16,32 @@ public class AppLogger
     this.logger = LoggerFactory.getLogger(clazz);
   }
 
-  public void info(String msg, String logCategory)
+  public void info(String msg)
   {
-    this.info(msg, logCategory, new LinkedHashMap<String, String>());
+    this.info(msg, null, null, LogType.STRING);
   }
 
-  public void info(String msg, String logCategory, List<LogField> fields)
+  public void info(String msg, String logCategory)
   {
-    Map<String, String> fieldMap = new LinkedHashMap<String, String>();
-    fields.forEach(logField -> fieldMap.put(logField.getKey(), logField.getValue()));
-    this.info(msg, logCategory, fieldMap);
+    this.info(msg, logCategory, null, LogType.STRING);
   }
 
   public void info(String msg, String logCategory, Map<String, String> fields)
+  {
+    this.info(msg, logCategory, fields, LogType.STRING);
+  }
+
+  public void info(Object msg, LogType logType)
+  {
+    this.info(msg, null, null, logType);
+  }
+
+  public void info(Object msg, String logCategory, LogType logType)
+  {
+    this.info(msg, logCategory, null, logType);
+  }
+
+  public void info(Object msg, String logCategory, Map<String, String> fields, LogType logType)
   {
     if (logCategory != null)
     {
@@ -42,7 +53,15 @@ public class AppLogger
       fields.forEach(MDC::put);
     }
 
-    logger.info(msg);
+    switch (logType)
+    {
+      case STRING:
+        logger.info(msg.toString());
+        break;
+      case JSON_STRING:
+        logger.info(JsonUtil.toJson(msg));
+        break;
+    }
 
     if (logCategory != null)
     {
