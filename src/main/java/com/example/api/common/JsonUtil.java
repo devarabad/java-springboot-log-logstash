@@ -16,7 +16,7 @@ public class JsonUtil
     }
     catch (JsonProcessingException e)
     {
-      // Cannot convert object to json string
+      e.printStackTrace();
     }
 
     return jsonStr;

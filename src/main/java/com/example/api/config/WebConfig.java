@@ -1,4 +1,4 @@
-package com.example.api.bootstrap;
+package com.example.api.config;
 
 import com.example.api.interceptor.LogInterceptor;
 import org.springframework.context.annotation.Configuration;

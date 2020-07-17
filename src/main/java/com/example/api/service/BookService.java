@@ -2,6 +2,7 @@ package com.example.api.service;
 
 import com.example.api.common.AppLogger;
 import com.example.api.common.JsonUtil;
+import com.example.api.common.LogType;
 import com.example.api.data.BookDao;
 import com.example.api.data.model.Book;
 import com.example.api.resource.model.BookInfo;
@@ -43,7 +44,7 @@ public class BookService
     SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd");
     String publishDateStr       = formatter.format(publishDate);
 
-    log.info(JsonUtil.toJson(book), "BookService.getBook.end", logFieldMap);
+    log.info(book, "BookService.getBook.end", logFieldMap, LogType.JSON_STRING);
 
     return new BookInfo(id
                         , title
@@ -56,7 +57,7 @@ public class BookService
 
   public String addBook(BookInfo bookInfo)
   {
-    log.info(JsonUtil.toJson(bookInfo), "BookService.addBook.start");
+    log.info(bookInfo, "BookService.addBook.start", LogType.JSON_STRING);
 
     String title            = bookInfo.getTitle();
     String description      = bookInfo.getDescription();
@@ -101,7 +102,7 @@ public class BookService
   {
     Map<String, String> logFieldMap = new LinkedHashMap<String, String>();
     logFieldMap.put("bookId", id);
-    log.info(JsonUtil.toJson(bookInfo), "BookService.updateBook.start", logFieldMap);
+    log.info(bookInfo, "BookService.updateBook.start", logFieldMap, LogType.JSON_STRING);
 
     String title            = bookInfo.getTitle();
     String description      = bookInfo.getDescription();
